@@ -7,7 +7,6 @@ import (
 	"github.com/d--/vskk/config"
 	"github.com/d--/vskk/discord"
 	"github.com/d--/vskk/steam"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -81,7 +80,7 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 		for {
 			select {
 			case <-ctx.Done():
-				err := cmd.Process.Signal(os.Kill)
+				err := cmd.Process.Kill()
 				if err != nil {
 					fmt.Println("failed to send kill signal:", err)
 					continue
@@ -125,7 +124,7 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 						timer = time.Now() // reset timeout
 						delete(players, id)
 					}
-				case strings.Contains(line, "Zonesystem Start"):
+				case strings.Contains(line, "Registering lobby"):
 					ip, err := GetPublicIP()
 					if err != nil {
 						fmt.Println("could not get server public ip")
@@ -157,7 +156,7 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 				}
 			default:
 				if len(players) == 0 && time.Since(timer) > r.Timeout {
-					err := cmd.Process.Signal(os.Kill)
+					err := cmd.Process.Kill()
 					if err != nil {
 						fmt.Println("failed to send kill signal:", err)
 						continue

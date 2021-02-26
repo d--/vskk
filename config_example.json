@@ -1,0 +1,20 @@
+{
+  "command_phrase": "!valheim",
+  "valheim_server_exe_location": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Valheim dedicated server\\valheim_server.exe",
+  "valheim_server_opts": {
+    "name": "Super Duper Awesome Valheim Server",
+    "port": "2456",
+    "world": "sdavs_world",
+    "password": "REPLACE WITH YOUR PASSWORD",
+    "save_dir_full_path": "C:\\Users\\REPLACE ME\\REPLACE ME"
+  },
+  "timeout_minutes": 10,
+  "steam_web_api_key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "discord_auth_bot_token": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "discord_channel_name": "XXXXXXXXXXXXXXXX",
+  "random_start_messages": [
+    "Request received!",
+    "Got it.",
+    "One moment."
+  ]
+}

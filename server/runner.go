@@ -70,6 +70,7 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 
 		timer := time.Now()
 		players := make(map[string]bool)
+		lastIdSocketClosed := ""
 
 		valheimOutput := make(chan string)
 		outputScanCtx, outputScanCancel := context.WithCancel(ctx)
@@ -115,14 +116,15 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 
 					fmt.Printf("connected: %s (%s)\n", id, name)
 					timer = time.Now() // reset timeout
-				case strings.Contains(line, "RPC_Disconnect"):
+				case strings.Contains(line, "Closing socket"):
 					fields := strings.Fields(line)
 					id := fields[len(fields) - 1]
-
-					if _, ok := players[id]; ok {
-						fmt.Printf("player disconnected: %s\n", id)
+					lastIdSocketClosed = id
+				case strings.Contains(line, "k_ESteamNetworkingConnectionState_ClosedByPeer"):
+					if _, ok := players[lastIdSocketClosed]; ok {
+						fmt.Printf("player disconnected: %s\n", lastIdSocketClosed)
 						timer = time.Now() // reset timeout
-						delete(players, id)
+						delete(players, lastIdSocketClosed)
 					}
 				case strings.Contains(line, "Registering lobby"):
 					ip, err := GetPublicIP()

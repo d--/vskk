@@ -25,7 +25,7 @@ type API struct {
 }
 
 func (api *API) GetPlayerName(id string) (string, error) {
-	endpoint := "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key="
+	endpoint := "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
 
 	url := fmt.Sprintf("%s?key=%s&steamids=%s", endpoint, api.Key, id)
 	response, err := http.Get(url)

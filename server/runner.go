@@ -104,8 +104,9 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 				case strings.TrimSpace(line) == "":
 					continue
 				case strings.Contains(line, "Got handshake from client"):
+					fmt.Printf("VALHEIM: %s\n", line)
 					fields := strings.Fields(line)
-					id := fields[len(fields) - 1]
+					id := fields[len(fields)-1]
 					players[id] = true
 
 					name, err := r.SteamApi.GetPlayerName(id)
@@ -117,16 +118,19 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 					fmt.Printf("connected: %s (%s)\n", id, name)
 					timer = time.Now() // reset timeout
 				case strings.Contains(line, "Closing socket"):
+					fmt.Printf("VALHEIM: %s\n", line)
 					fields := strings.Fields(line)
-					id := fields[len(fields) - 1]
+					id := fields[len(fields)-1]
 					lastIdSocketClosed = id
 				case strings.Contains(line, "k_ESteamNetworkingConnectionState_ClosedByPeer"):
+					fmt.Printf("VALHEIM: %s\n", line)
 					if _, ok := players[lastIdSocketClosed]; ok {
 						fmt.Printf("player disconnected: %s\n", lastIdSocketClosed)
 						timer = time.Now() // reset timeout
 						delete(players, lastIdSocketClosed)
 					}
 				case strings.Contains(line, "Registering lobby"):
+					fmt.Printf("VALHEIM: %s\n", line)
 					ip, err := GetPublicIP()
 					if err != nil {
 						fmt.Println("could not get server public ip")
@@ -141,9 +145,9 @@ func (r *Runner) Start(parentCtx context.Context, botContext discord.BotContext)
 				default:
 					fmt.Printf("VALHEIM: %s\n", line)
 				}
-			case <- r.RequestPlayers:
+			case <-r.RequestPlayers:
 				message := fmt.Sprintf("Total players: %d\n", len(players))
-				for k, _ := range players {
+				for k := range players {
 					name, err := r.SteamApi.GetPlayerName(k)
 					if err != nil {
 						fmt.Println("failed to get player name:", err)
